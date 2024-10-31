@@ -44,7 +44,7 @@ mod tests {
     struct TestConfig;
     
     impl super::Config for TestConfig {
-        type AccountId = String;
+        type AccountId = &'static str;
         type BlockNumber = u32;
         type Nonce = u32;
     }
@@ -64,8 +64,8 @@ mod tests {
 
     #[test]
     fn inc_nonce() {
-        let mut system: super::Pallet<TestConfig> = super::Pallet::new();
-        system.inc_nonce(&String::from("alice"));
-        assert_eq!(system.get_nonce(&String::from("alice")), 1);
+        let mut system = super::Pallet::<TestConfig>::new();
+        system.inc_nonce(&"alice");
+        assert_eq!(system.get_nonce(&"alice"), 1);
     }
 }

@@ -74,7 +74,7 @@ mod tests {
     struct TestConfig;
 
     impl system::Config for TestConfig {
-        type AccountId = String;
+        type AccountId = &'static str;
         type BlockNumber = u32;
         type Nonce = u32;
     }
@@ -87,35 +87,35 @@ mod tests {
     fn init_balances() {
         let mut balances: Pallet<TestConfig> = super::Pallet::new();
 
-        assert_eq!(balances.balance(&"alice".to_string()), 0);
+        assert_eq!(balances.balance(&"alice"), 0);
 
-        balances.set_balance(&"alice".to_string(), 100);
+        balances.set_balance(&"alice", 100);
 
-        assert_eq!(balances.balance(&"alice".to_string()), 100);
-        assert_eq!(balances.balance(&"bob".to_string()), 0);
+        assert_eq!(balances.balance(&"alice"), 100);
+        assert_eq!(balances.balance(&"bob"), 0);
     }
 
     #[test]
     fn transfer_balance() {
         let mut balances: Pallet<TestConfig> = super::Pallet::new();
 
-        balances.set_balance(&"alice".to_string(), 100);
-        let _ = balances.transfer(&"alice".to_string(), &"jopa".to_string(), 25);
+        balances.set_balance(&"alice", 100);
+        let _ = balances.transfer(&"alice", &"jopa", 25);
 
-        assert_eq!(balances.balance(&"jopa".to_string()), 25);
-        assert_eq!(balances.balance(&"alice".to_string()), 75);
+        assert_eq!(balances.balance(&"jopa"), 25);
+        assert_eq!(balances.balance(&"alice"), 75);
     }
 
     #[test]
     fn transfer_balance_overflow() {
         let mut balances: Pallet<TestConfig> = super::Pallet::new();
 
-        balances.set_balance(&"alice".to_string(), u128::MAX);
-        balances.set_balance(&"bob".to_string(), 1);
-        let result = balances.transfer(&"bob".to_string(), &"alice".to_string(),  1);
+        balances.set_balance(&"alice", u128::MAX);
+        balances.set_balance(&"bob", 1);
+        let result = balances.transfer(&"bob", &"alice",  1);
     
         assert_eq!(result, Err("Overflow when adding to balance"));
-        assert_eq!(balances.balance(&"alice".to_string()), u128::MAX);
-        assert_eq!(balances.balance(&"bob".to_string()), 1)
+        assert_eq!(balances.balance(&"alice"), u128::MAX);
+        assert_eq!(balances.balance(&"bob"), 1)
     }
 }

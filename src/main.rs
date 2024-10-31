@@ -3,7 +3,7 @@ use support::Dispatch;
 mod balances;
 mod support;
 mod system;
-mod proof_of_existance;
+mod proof_of_existence;
 
 mod types {
     use crate::support;
@@ -118,8 +118,23 @@ fn main() {
         ],
     };
 
+    let block_3 = types::Block {
+        header: support::Header { block_number: 3 },
+        extrinsics: vec![
+            support::Extrinsic {
+                caller: bob.clone(),
+                call: RuntimeCall::Balances(balances::Call::Transfer { to: "menchik".to_string(), amount: 1 })
+            },
+            support::Extrinsic {
+                caller: bob.clone(),
+                call: RuntimeCall::Balances(balances::Call::Transfer { to: "popjka".to_string(), amount: 1 })
+            }
+        ],
+    };
+
     runtime.execute_block(block_1).expect("wrong block execution");
     runtime.execute_block(block_2).expect("wrong block execution");
+    runtime.execute_block(block_3).expect("wrong block execution");
 
     println!("{:#?}", runtime);
 }
