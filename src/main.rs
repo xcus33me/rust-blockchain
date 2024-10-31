@@ -1,9 +1,9 @@
 use support::Dispatch;
-use types::Block;
 
 mod balances;
 mod support;
 mod system;
+mod proof_of_existance;
 
 mod types {
     use crate::support;
