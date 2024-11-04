@@ -4,6 +4,7 @@ mod balances;
 mod support;
 mod system;
 mod proof_of_existence;
+mod block;
 
 mod types {
     use crate::support;
