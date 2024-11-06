@@ -6,9 +6,9 @@ use crypto::sha2::Sha256;
 use std::time::SystemTime;
 use log::info;
 
-pub type Result<T> = std::result::Result<T, failure::Error>;
+use crate::error::*;
 
-const TARGET_HEX: usize = 4;
+pub const TARGET_HEX: usize = 4;
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Block {
@@ -18,11 +18,6 @@ pub struct Block {
     hash: String,
     height: usize,
     nonce: i32,
-}
-
-#[derive(Debug)]
-pub struct Blockchain {
-    blocks: Vec<Block>,
 }
 
 impl Block {
@@ -90,34 +85,5 @@ impl Block {
         );
         let bytes = bincode::serialize(&content)?;
         Ok(bytes)
-    }
-}
-
-impl Blockchain {
-    pub fn new() -> Blockchain {
-        Blockchain {
-            blocks: vec![Block::new_genesis_block()],
-        }
-    }
-
-    pub fn add_block(&mut self, data: String) -> Result<()> {
-        let prev = self.blocks.last().unwrap();
-        let new_block = Block::new_block(data, prev.get_hash(), TARGET_HEX)?;
-        self.blocks.push(new_block);
-        Ok(())
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn create_blockchain() {
-        let mut b = Blockchain::new();
-        b.add_block("data".to_string()).unwrap();
-        b.add_block("data1".to_string()).unwrap();
-        b.add_block("data2".to_string()).unwrap();
-        dbg!(b);
     }
 }
